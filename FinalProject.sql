@@ -307,6 +307,26 @@ SELECT
 	WHERE NOT EXISTS (SELECT * FROM Book_Loans WHERE a2.Card_Num = a1.Borrower_CardNumber)
 	ORDER BY a1.Borrower_Name
 
+-----------CORRECTION----------------------
+--Neither of my answers for Number 3 will return anything, even if you had a borrower with nothing checked out, which you can test by adding another borrower. 
+--INNER JOINS don't return null values, plus a value isn't 'equal' to NULL it just IS or IS NOT NULL
+--So these two would work:
+
+SELECT a1.Borrower_Name, a2.card_Num, a2.Date_Out, a2.Date_Due, 
+a3.Book_Title
+FROM Borrower a1 
+FULL OUTER JOIN Book_Loans a2 ON a2.card_Num = a1.Borrower_CardNumber
+FULL OUTER JOIN Book a3 ON a3.Book_id = a2.Book_id
+WHERE a2.Date_Due IS NULL
+ORDER BY a1.Borrower_Name
+------------------------------------------and
+SELECT a1.Borrower_Name 
+FROM Borrower a1
+FULL OUTER  JOIN Book_Loans a2 ON a2.card_Num = a1.Borrower_CardNumber
+FULL OUTER  JOIN Book a3 ON a3.Book_id = a2.Book_id
+WHERE NOT EXISTS (SELECT * FROM Book_Loans WHERE a2.Card_Num = a1.Borrower_CardNumber)
+ORDER BY a1.Borrower_Name
+----------------------------------
 
 
 /*
